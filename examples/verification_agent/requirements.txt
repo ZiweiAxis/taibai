@@ -1,0 +1,3 @@
+# 接入验证用智能体依赖
+# 太白 SDK 以本地路径安装：pip install -e ../../sdk/python
+-e ../../sdk/python
