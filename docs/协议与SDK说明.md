@@ -29,7 +29,7 @@
 
 ```python
 from ziwei_taibai import Agent
-from ziwei_taibai.protocol import EVENT_ACTION
+from ziwei_taibai.protocol import ACTION_FILE_WRITE
 
 agent = Agent(
     owner="user@company.com",
@@ -38,7 +38,7 @@ agent = Agent(
 )
 agent.register()           # 触发注册流程（若 API 支持）
 agent.heartbeat()          # 保活
-agent.trace(EVENT_ACTION, action_type="file_write", path="/data/example.txt")
+agent.trace(ACTION_FILE_WRITE, path="/data/example.txt")  # 操作类型 + 明细
 ```
 
-验证智能体见 `examples/verification_agent/main.py`。
+说明：`trace(action_type, **detail)` 第一个参数为操作类型（如 `ACTION_FILE_WRITE`），对应协议中的 `m.agent.action` 上报。验证智能体见 `examples/verification_agent/main.py`。

@@ -1,0 +1,19 @@
+# Claude Code CLI Adapter Configuration Example
+
+adapter:
+  # Adapter type (required)
+  type: "claude-code-cli"
+
+  # Common fields (required)
+  owner_id: "user@company.com"
+  tianshu_api_base: "http://localhost:8082"
+  diting_audit_url: "http://localhost:8080/api/audit"
+
+  # Claude Code CLI specific fields
+  CLAUDE_CODE_CLI_PATH: "claude"  # Path to claude CLI binary
+  CLAUDE_CODE_CLI_ARGS: ""  # Additional CLI arguments (optional)
+
+  # Optional fields
+  heartbeat_interval: 30  # Heartbeat interval in seconds
+  task_timeout: 300  # Task timeout in seconds
+  auto_report_actions: true  # Auto report actions to Diting

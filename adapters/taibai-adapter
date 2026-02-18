@@ -1,0 +1,96 @@
+"""
+Taibai Adapter CLI
+
+Command-line interface for running adapters.
+"""
+
+import argparse
+import asyncio
+import sys
+from pathlib import Path
+
+# Add SDK to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "sdk" / "python"))
+
+from ziwei_taibai.config import load_config_from_file, load_config_from_env
+from ziwei_taibai.adapters.registry import AdapterRegistry
+from ziwei_taibai.manager import AdapterManager
+
+
+async def main():
+    parser = argparse.ArgumentParser(description="Taibai Adapter CLI")
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to configuration file (YAML)",
+    )
+    parser.add_argument(
+        "--type",
+        type=str,
+        help="Adapter type (overrides config file)",
+    )
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List available adapters",
+    )
+
+    args = parser.parse_args()
+
+    # List adapters
+    if args.list:
+        print("Available adapters:")
+        for name in AdapterRegistry.list_adapters():
+            print(f"  - {name}")
+        return
+
+    # Load configuration
+    if args.config:
+        config = load_config_from_file(args.config)
+    else:
+        config = load_config_from_env()
+
+    # Override adapter type if specified
+    if args.type:
+        config.adapter_type = args.type
+
+    print(f"Starting adapter: {config.adapter_type}")
+    print(f"Owner: {config.owner_id}")
+    print(f"Tianshu: {config.tianshu_api_base}")
+
+    # Create adapter
+    try:
+        adapter = AdapterRegistry.create(config.adapter_type, config)
+    except ValueError as e:
+        print(f"Error: {e}")
+        print("\nAvailable adapters:")
+        for name in AdapterRegistry.list_adapters():
+            print(f"  - {name}")
+        sys.exit(1)
+
+    # Create manager
+    manager = AdapterManager(adapter, auto_restart=True)
+
+    # Start adapter
+    try:
+        await manager.start()
+
+        # Keep running
+        print("Adapter running. Press Ctrl+C to stop.")
+        while True:
+            await asyncio.sleep(1)
+
+    except KeyboardInterrupt:
+        print("\nShutting down...")
+    finally:
+        await manager.stop()
+
+
+if __name__ == "__main__":
+    # Import adapters to register them
+    try:
+        from claude_code_cli.adapter import ClaudeCodeCLIAdapter
+    except ImportError:
+        pass
+
+    asyncio.run(main())

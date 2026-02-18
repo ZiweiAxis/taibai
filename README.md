@@ -1,11 +1,11 @@
 # 太白（Taibai）
 
-紫微智能体**接入规范与 SDK** 子模块：协议封装、多语言 SDK 雏形、**接入验证用智能体**。
+紫微智能体**接入规范与 SDK** 子模块：协议封装、多语言 SDK 雏形、**接入验证用智能体**。与天枢、谛听一致，**采用 BMAD 进行规划与实现**（`_bmad/`、`_bmad-output/`）；子项目内规划/架构/Story 由太白 sub-agent 在 `ziwei/taibai` 下按 BMAD 工作流执行。
 
 ## 定位
 
 - **协议**：以根 `ziwei/docs/open/technical/紫微智能体治理基础设施-技术方案.md` §4（太白协议）为权威，本仓提供实现侧封装与示例。
-- **目标**：降低智能体接入紫微（天枢 + 谛听）门槛；配合**一个验证用智能体**做**集成接入验证**（发现天枢、注册/心跳、上报审计）。
+- **目标**：降低智能体接入紫微（天枢 + 谛听）门槛；配合**验证用智能体**做集成接入验证；**默认提供 Claude Code CLI Agent 对接**（以 CLI 形态运行的 Claude 编程助手经太白与天枢联络），方案见根文档《太白对接 Claude Code CLI 方案》。
 
 ## 目录结构
 
@@ -23,10 +23,8 @@ taibai/
 │       │   └── agent.py     # Agent 封装：discovery、register、heartbeat、trace
 │       └── pyproject.toml
 ├── examples/
-│   └── verification_agent/  # 接入验证用智能体（配合集成验证）
-│       ├── README.md
-│       ├── main.py          # 发现 → 注册/心跳 → 上报一条 action
-│       └── requirements.txt
+│   ├── verification_agent/     # 接入验证用智能体（发现→注册→心跳→上报）
+│   └── (可选) adapters/       # 预置适配器：如 claude_code_cli_agent（规划中）
 └── .env.example
 ```
 
@@ -49,4 +47,5 @@ taibai/
 ## 参考
 
 - 技术方案（太白 §4）：`ziwei/docs/open/technical/紫微智能体治理基础设施-技术方案.md`
+- **太白对接 Claude Code CLI 方案**：`ziwei/docs/open/technical/太白对接Claude-Code-CLI方案.md`
 - 根架构与太白边界：`ziwei/_bmad-output/planning-artifacts/architecture-ziwei.md`、`太白边界决策.md`（已更新为建立太白子模块）
