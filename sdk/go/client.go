@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strings"
 	"sync"
-	"time"
 )
 
 // HTTPClient interface for making HTTP requests
@@ -94,15 +93,15 @@ type Response struct {
 type ErrorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-	Error   string `json:"error,omitempty"`
+	ErrorMsg string `json:"error,omitempty"`
 }
 
 func (e *ErrorResponse) Error() string {
 	if e.Message != "" {
 		return e.Message
 	}
-	if e.Error != "" {
-		return e.Error
+	if e.ErrorMsg != "" {
+		return e.ErrorMsg
 	}
 	return "unknown error"
 }

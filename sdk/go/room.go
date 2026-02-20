@@ -513,10 +513,7 @@ type RoomDetailsResponse struct {
 
 // DeleteRoom deletes a room (admin API)
 func (r *RoomAPI) DeleteRoom(ctx context.Context, roomID string, purge bool) error {
-	body := map[string]interface{}{
-		"purge": purge,
-	}
-	return r.client.DELETE(ctx, "/_matrix/client/r0/admin/rooms/"+roomID, nil, nil)
+	return r.client.DELETE(ctx, "/_matrix/client/r0/admin/rooms/"+roomID, map[string]string{"purge": "true"}, nil)
 }
 
 // ForgetRoom forgets a room
